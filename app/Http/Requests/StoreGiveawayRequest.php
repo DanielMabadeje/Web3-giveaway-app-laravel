@@ -22,7 +22,7 @@ class StoreGiveawayRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'creator_wallet'    =>  ['required'],
+            'giveaway_name'    =>  ['required'],
             'amount'            =>  ['required'],
             'wallet_type'       =>  ['required'],
             'giveaway_type'     =>  ['required'],

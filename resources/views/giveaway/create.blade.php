@@ -20,9 +20,9 @@
                 
                         <!-- Creator Wallet -->
                         <div>
-                            <x-input-label for="creator_wallet" :value="__('Creator Wallet')" />
-                            <x-text-input id="creator_wallet" class="block mt-1 w-full" type="text" name="creator_wallet" :value="old('creator_wallet')" required autofocus autocomplete="creator_wallet" />
-                            <x-input-error :messages="$errors->get('creator_wallet')" class="mt-2" />
+                            <x-input-label for="giveaway_name" :value="__('Giveaway Name')" />
+                            <x-text-input id="giveaway_name" class="block mt-1 w-full" type="text" name="giveaway_name" :value="old('giveaway_name')" required autofocus autocomplete="giveaway_name" />
+                            <x-input-error :messages="$errors->get('giveaway_name')" class="mt-2" />
                         </div>
                 
                         <!--amount -->

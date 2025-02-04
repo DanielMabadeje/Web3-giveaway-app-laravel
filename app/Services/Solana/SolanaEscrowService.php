@@ -38,10 +38,11 @@ class SolanaEscrowService extends BaseSolanaService
             $transaction = new Transaction(null, null, $fromPublicKey->getPublicKey());
             $transaction->add($instruction);
 
-            // $signature = $this->sdk->sendTransaction($transaction, [$this->keypair]);
-            $signature = $this->sdk->sendTransaction($transaction, [$fromPublicKey]);
+            $signature = $this->sdk->sendTransaction($transaction, [$this->keypair]);
+            // $signature = $this->sdk->sendTransaction($transaction, [$fromPublicKey], []);
             return $signature;
         } catch (\Exception $e) {
+            dd($e, $this->keypair, $fromPublicKey->getPublicKey());
             throw new \Exception("Failed to send SOL: " . $e->getMessage());
         }
     }

@@ -36,7 +36,7 @@ class GiveawayParticipantController extends Controller
             if($giveaway->status == GiveawayStatusEnum::OPEN){
                 return view('claim-giveaway', ['giveaway'   =>  $giveaway, 'reference'  =>  $reference]);
             }
-            return view('cgiveaway.giveaway-closed.blade', ['giveaway'   =>  $giveaway, 'reference'  =>  $reference]);
+            return view('giveaway.giveaway-closed', ['giveaway'   =>  $giveaway, 'reference'  =>  $reference]);
         }
 
         return abort(404);
