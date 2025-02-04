@@ -41,7 +41,7 @@ class SolanaTransactionService extends BaseSolanaService
         $walletAddress = $this->keypair->getPublicKey();
 
         try {
-            // Step 1: Fetch recent transaction signatures for the wallet address
+            //Fetch recent transaction signatures for the wallet address
             $signaturesResponse = Http::post($rpcUrl, [
                 'jsonrpc' => '2.0',
                 'id' => 1,
@@ -57,7 +57,7 @@ class SolanaTransactionService extends BaseSolanaService
             $signatures = $signaturesResponse->json()['result'];
             $transactions = [];
 
-            // Step 2: For each signature, get transaction details
+            //For each signature, get transaction details
             foreach ($signatures as $signatureData) {
                 $signature = $signatureData['signature'];
 
@@ -76,13 +76,13 @@ class SolanaTransactionService extends BaseSolanaService
 
                 $transaction = $transactionResponse->json()['result'];
 
-                // Step 3: Extract relevant details (sender, amount, etc.)
+                //Extract relevant details (sender, amount, etc.)
                 $senderAddress = $transaction['transaction']['message']['accountKeys'][0];
                 $preBalance = $transaction['meta']['preBalances'][0];
                 $postBalance = $transaction['meta']['postBalances'][0];
                 $amount = $preBalance - $postBalance; // Calculate the amount sent
 
-                // Step 4: Store transaction info (or match it to a giveaway)
+                //Store transaction info (or match it to a giveaway)
                 $transactions[] = [
                     'signature' => $signature,
                     'sender_address' => $senderAddress,

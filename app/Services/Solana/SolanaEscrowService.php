@@ -27,7 +27,6 @@ class SolanaEscrowService extends BaseSolanaService
         $fromPublicKey = new PublicKey($escrowAddress); // Escrow account
         $toPublicKey = new PublicKey($recipientAddress); // Recipient  4fYNw3dojWmQ4dXtSGE9epjRGy9pFSx62YypT7avPYvA (a test address)
 
-        // dd($fromPublicKey->getPublicKey(), $toPublicKey->getPublicKey(), $escrowAddress, $recipientAddress);
         $instruction = SystemProgram::transfer(
             $fromPublicKey->getPublicKey(),
             $toPublicKey,
