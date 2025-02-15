@@ -25,7 +25,7 @@ class GiveawayController extends Controller
      */
     public function index()
     {
-        return view('giveaway.index', ['giveaways'=>Giveaway::where('user_id', Auth::id())->get()]);
+        return view('giveaway.index', ['giveaways'=>Giveaway::where('user_id', Auth::id())->latest()->get()]);
     }
 
     /**
