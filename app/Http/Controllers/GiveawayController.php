@@ -103,7 +103,7 @@ class GiveawayController extends Controller
 
     public function confirmUserhasSentAmountToAddress(ConfirmUserhasSentAmountToAddressRequest $request, Giveaway $giveaway)
     {
-        if($this->cryptoService->getBalance($giveaway->escrow_address) == $giveaway->amount){
+        if($this->cryptoService->getBalance($giveaway->escrow_address) == $giveaway->amount || $this->cryptoService->getBalance($giveaway->escrow_address) > $giveaway->amount){
 
             $giveaway->status   =   GiveawayStatusEnum::OPEN;
             $giveaway->save();

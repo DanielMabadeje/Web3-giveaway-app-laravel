@@ -22,8 +22,10 @@ class GiveawayParticipantController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($reference)
     {
+        $giveaway   =   Giveaway::where('reference', $reference)->orWhere('id', $reference)->first();   
+        return view('giveaway.view-participants', ['giveaway'   =>  $giveaway, 'reference'  =>  $reference]);
     }
 
     /**
@@ -54,7 +56,10 @@ class GiveawayParticipantController extends Controller
                                         'giveaway_id'       =>  $giveaway->id,
                                     ]);
 
-            return $this->handleGiveAwayIfFirstParticipant($giveawayParticipant, $giveaway);
+            if($this->handleGiveAwayIfFirstParticipant($giveawayParticipant, $giveaway)){
+                return redirect()->back()->with(['success'=>$giveaway->amount.' '.$giveaway->wallet_type->value.' sent successfully']);
+            }
+            return redirect()->back()->with(['success'=>'Wallet address sent successfully']);
         }
 
         return abort(404);
@@ -99,9 +104,34 @@ class GiveawayParticipantController extends Controller
         }
     }
 
+    public function handleMakeWinner(Giveaway $giveaway, GiveawayParticipant $giveawayParticipant)
+    {
+        if ($giveaway->giveaway_type    ==  GiveawayTypeEnum::SELECT_WINNER) {
+            if($this->sendGiveawayToParticipant($giveawayParticipant, $giveaway)){
+                return redirect()->back()->with(['success'=>$giveaway->amount.' '.$giveaway->wallet_type->value.' sent successfully']);
+            }
+            return redirect()->back()->withError('Somethign went wrong');
+        }
+        return redirect()->route('giveaway.index');
+    }
+
+    public function handleRoundRobinWinner(Giveaway $giveaway)
+    {
+        if ($giveaway->giveaway_type    ==  GiveawayTypeEnum::SELECT_WINNER) {
+
+            $giveawayParticipant = GiveawayParticipant::where('giveaway_id', $giveaway->id)->inRandomOrder()->first();
+            if($this->sendGiveawayToParticipant($giveawayParticipant, $giveaway)){
+                return redirect()->back()->with(['success'=>$giveaway->amount.' '.$giveaway->wallet_type->value.' sent successfully']);
+            }
+            return redirect()->back()->withError('Somethign went wrong');
+        }
+
+        return redirect()->route('giveaway.index');
+    }
+
     private function sendGiveawayToParticipant(GiveawayParticipant $giveawayParticipant, Giveaway $giveaway) 
     {
-        return $this->cryptoService->send(
+        $send = $this->cryptoService->send(
             new SendCryptoDTO(
                 $giveawayParticipant->wallet_address, 
                 json_decode($giveaway->escrow), 
@@ -116,5 +146,7 @@ class GiveawayParticipantController extends Controller
 
         $giveawayParticipant->is_winner =   true;
         $giveawayParticipant->save();
+
+        return $send;
     }
 }

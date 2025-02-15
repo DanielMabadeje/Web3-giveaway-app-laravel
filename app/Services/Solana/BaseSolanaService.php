@@ -17,27 +17,35 @@ abstract class BaseSolanaService
     public $sdk;
     public $program;
     public $keypair;
+    protected $rpcUrl;
 
     public function __construct()
     {
 
-        // Initialize Solana Client with RPC URL
-        $rpcUrl = SolanaRpcClient::DEVNET_ENDPOINT ?? config('solana.rpc_url', SolanaRpcClient::DEVNET_ENDPOINT);
-        $this->client = new SolanaRpcClient($rpcUrl);
+
+        $network = config('solana.solana_network');
+        $rpcUrls = [
+            'localnet' => SolanaRpcClient::LOCAL_ENDPOINT,
+            'testnet'  => SolanaRpcClient::DEVNET_ENDPOINT,
+            'mainnet'  => SolanaRpcClient::MAINNET_ENDPOINT,
+        ];
+
+        if (!isset($rpcUrls[$network])) {
+            throw new \Exception("Invalid SOLANA_NETWORK value: $network");
+        }
+        $this->rpcUrl = $rpcUrls[$network];
+        $this->client = new SolanaRpcClient($this->rpcUrl);
         $this->sdk = new Connection($this->client);
 
+        // Load the keypair from the specified path in .env
+        $walletPath = config('solana.solana_keypair_path');
 
-        $privateKeyBase64 = config('solana.app_sol_private_key');
-        
-        $privateKeyBytes = base64_decode($privateKeyBase64);
-        $correctedPrivateKey = substr($privateKeyBytes, 0, 64);
-
-        
-        if ($correctedPrivateKey === false || strlen($correctedPrivateKey) !== 64) {
-            throw new \Exception("Invalid Solana private key: must be a 64-byte secret key.");
+        if (!file_exists($walletPath)) {
+            throw new \Exception("Solana keypair file not found at: $walletPath");
         }
 
-        $this->keypair = Keypair::fromSecretKey($correctedPrivateKey);
+        $privateKeyArray = json_decode(file_get_contents($walletPath), true);
+        $this->keypair = Keypair::fromSecretKey($privateKeyArray);
         $this->program = new Program($this->client);
     }
 

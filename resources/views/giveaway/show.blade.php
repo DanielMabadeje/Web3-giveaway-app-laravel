@@ -103,7 +103,7 @@
                         @case('ROUNDROBIN')
                             @include('giveaway.partials.view-participants-round-robin')
                             @break
-                        @case('SELECTWINNER')
+                        @case('SELECT_WINNER')
                             @include('giveaway.partials.view-participants-select-winner')
                             @break
                         @default
