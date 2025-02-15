@@ -112,5 +112,9 @@ class GiveawayParticipantController extends Controller
 
         $giveaway->status   =   GiveawayStatusEnum::CLOSED;
         $giveaway->save();
+
+
+        $giveawayParticipant->is_winner =   true;
+        $giveawayParticipant->save();
     }
 }

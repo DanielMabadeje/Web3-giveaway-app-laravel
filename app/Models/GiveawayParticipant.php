@@ -12,7 +12,9 @@ class GiveawayParticipant extends Model
     use HasFactory;
 
     protected $fillable =   [
+        'name',
         'wallet_address',
+        'is_winner',
         'giveaway_id'
     ];
 

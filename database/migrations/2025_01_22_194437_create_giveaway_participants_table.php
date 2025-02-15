@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('giveaway_participants', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('giveaway_id');
+            $table->string('name')->nullable();
             $table->string('wallet_address');
+            $table->boolean('is_winner')->default(false);
             $table->timestamps();
 
             $table->foreign('giveaway_id')->references('id')->on('giveaways')->onDelete('cascade');

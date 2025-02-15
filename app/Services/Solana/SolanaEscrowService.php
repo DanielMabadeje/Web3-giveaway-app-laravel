@@ -15,6 +15,7 @@ class SolanaEscrowService extends BaseSolanaService
     public function getEscrowBalance(string $escrowAddress): float
     {
         $balance = $this->sdk->getBalance($escrowAddress);
+        // dd($balance);
         return $this->lamportsToSol($balance); // Convert lamports to SOL
     }
 
@@ -35,7 +36,7 @@ class SolanaEscrowService extends BaseSolanaService
         
 
         try {
-            $transaction = new Transaction(null, null, $fromPublicKey->getPublicKey());
+            $transaction = new Transaction(null, null, $fromPublicKey->getPublicKey(), [$fromPublicKey->getPublicKey()]);
             $transaction->add($instruction);
 
             $signature = $this->sdk->sendTransaction($transaction, [$this->keypair]);
