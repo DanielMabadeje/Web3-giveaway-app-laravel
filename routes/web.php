@@ -20,7 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('giveaway', GiveawayController::class);
     Route::get('giveaway/{id}/participants', [GiveawayParticipantController::class, 'index'])->name('view.giveaway.participants');
     Route::get('giveaway/{giveaway}/participant/{giveawayParticipant}/make-winner', [GiveawayParticipantController::class, 'handleMakeWinner'])->name('giveaway.make-winner');
-    Route::get('giveaway/{giveaway}/participants/round-robin', [GiveawayParticipantController::class, 'index'])->name('giveaway.round-robin-winner');
+    Route::get('giveaway/{giveaway}/participants/round-robin', [GiveawayParticipantController::class, 'handleRoundRobinWinner'])->name('giveaway.round-robin-winner');
 
     Route::get('/send-money/{giveaway}', [GiveawayController::class, 'sendAmount'])->name('giveaway.send-money');
     Route::post('/send-money/{giveaway}', [GiveawayController::class, 'confirmUserhasSentAmountToAddress'])->name('giveaway.send-money-post');

@@ -117,7 +117,7 @@ class GiveawayParticipantController extends Controller
 
     public function handleRoundRobinWinner(Giveaway $giveaway)
     {
-        if ($giveaway->giveaway_type    ==  GiveawayTypeEnum::SELECT_WINNER) {
+        if ($giveaway->giveaway_type    ==  GiveawayTypeEnum::ROUNDROBIN) {
 
             $giveawayParticipant = GiveawayParticipant::where('giveaway_id', $giveaway->id)->inRandomOrder()->first();
             if($this->sendGiveawayToParticipant($giveawayParticipant, $giveaway)){
