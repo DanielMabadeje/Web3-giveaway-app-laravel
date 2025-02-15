@@ -33,11 +33,11 @@
                                             </p>
                                         </div>
                                         @if ($giveaway->status->value == 'Open')
-                                            <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                                
-                                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Make Winner</a>
-                    
-                                            </div>
+                                            @if ($giveaway->giveaway_type->value == 'SELECT_WINNER')
+                                                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                                    <a href="{{route('giveaway.make-winner', [$giveaway, $participant])}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Make Winner</a>
+                                                </div>
+                                            @endif
                                         @else
                                             @if ($participant->is_winner)
                                                 <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
@@ -64,6 +64,16 @@
                             <div class="right px-3 ml-auto">
                                 {{$participants->links()}}
                             </div>
+                            @if($giveaway->status->value == 'Open' && $giveaway->giveaway_type->value == 'ROUNDROBIN')
+                                <div>
+                                    <a href="{{route('giveaway.round-robin-winner', $giveaway)}}" class=" ml-auto inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                                        Select Random Winner
+                                        <svg class=" w-2.5 h-2.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                        </svg>
+                                    </a>
+                                </div> 
+                            @endif
                         </div>
                     </div>
                 </div>
