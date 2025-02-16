@@ -19,7 +19,7 @@ class CryptoServiceProvider extends ServiceProvider
     {
         $this->app->bind(CryptoServiceInterface::class, function ($app) {
             $request = $app->make(Request::class); // Get the current request
-            $giveawayType = $request->input('wallet_type', WalletTypeEnum::ETHEREUM); // Default to ETH
+            $giveawayType = $request->input('wallet_type', WalletTypeEnum::SOLANA); // Default to SOL
 
             if ($giveawayType === WalletTypeEnum::ETHEREUM) {
                 return $app->make(ETHService::class); // Use service container
