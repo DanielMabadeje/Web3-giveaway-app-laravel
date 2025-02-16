@@ -1,0 +1,58 @@
+//This was recommended by AI
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract GiveawayEscrow {
+    struct Escrow {
+        address sender;
+        address recipient;
+        uint256 amount;
+        bool released;
+    }
+
+    mapping(uint256 => Escrow) public escrows;  // Maps giveaway IDs to escrow data
+
+    event Deposited(uint256 giveawayId, address sender, uint256 amount);
+    event Released(uint256 giveawayId, address recipient, uint256 amount);
+
+    function deposit(uint256 giveawayId, address recipient) external payable {
+        require(msg.value > 0, "Must send ETH");
+
+        escrows[giveawayId] = Escrow({
+            sender: msg.sender,
+            recipient: recipient,
+            amount: msg.value,
+            released: false
+        });
+
+        emit Deposited(giveawayId, msg.sender, msg.value);
+    }
+
+    function release(uint256 giveawayId) external {
+        Escrow storage escrow = escrows[giveawayId];
+        require(escrow.sender == msg.sender, "Only sender can release");
+        require(!escrow.released, "Already released");
+
+        escrow.released = true;
+        payable(escrow.recipient).transfer(escrow.amount);
+
+        emit Released(giveawayId, escrow.recipient, escrow.amount);
+    }
+}
+
+
+This contract: ✔️ Tracks deposits using mapping(uint256 => Escrow).
+✔️ Allows deposits using deposit().
+✔️ Allows the sender to release funds to a recipient using release().
+
+2️⃣ Compile & Deploy the Contract
+Use Remix IDE (Easy) or Hardhat (for advanced deployment).
+Deploy to Ethereum (Mainnet/Testnet) or Sepolia Testnet.
+Get the contract address after deployment.
+3️⃣ Interact with the Contract from Laravel (PHP)
+Once deployed, your Laravel app (via web3.php) can:
+
+Call deposit() when a giveaway is created.
+Call release() when the funds should be transferred.
+Fetch giveaway escrow balances.
