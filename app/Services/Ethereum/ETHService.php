@@ -6,41 +6,37 @@ use App\DTOs\SendCryptoDTO;
 use App\DTOs\SendETHDTO;
 use App\Interfaces\CryptoServiceInterface;
 
-class ETHService    extends BaseETHService  implements  CryptoServiceInterface
+class ETHService implements CryptoServiceInterface
 {
-    protected $client;
-    protected $keypair;
+    public function __construct(
+        protected ETHTransactionService $ethereumTransactionService,
+        protected ETHEscrowService $ethereumEscrowService
+    ) {}
 
-    public function __construct(public ETHTransactionService $ETHTransactionService)
+    public function generateEscrowAccount(string $seed)
     {
-        
+        //Omor, remember that Ethereum uses a smart contract instead of PDAs. Each giveaway can be an ID inside the contract.
+        return $this->ethereumEscrowService->createEscrow($seed);
     }
 
-    /**
-     * Send SOL to a recipient.
-     */
+    public function getBalance(string $walletAddress)
+    {
+        return $this->ethereumEscrowService->getBalance($walletAddress);
+    }
+
     public function send(SendCryptoDTO $sendCryptoDTO)
     {
         try {
-            $transactionHash = $this->ETHTransactionService->sendETH(new SendETHDTO($sendCryptoDTO->recepientAddress, $sendCryptoDTO->amount));
-            return response()->json([
-                'message' => 'ETH sent successfully!',
-                'transaction_hash' => $transactionHash,
-            ]);
+            return $this->ethereumTransactionService->sendEthereum(
+                new SendETHDTO(
+                    $sendCryptoDTO->recepientAddress, 
+                    $sendCryptoDTO->escrow, 
+                    $sendCryptoDTO->escrowAddress, 
+                    $sendCryptoDTO->amount
+                )
+            );
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    }
-
-    public function generateEscrowAccount($seed =   'giveaway123')
-    {
-    }
-
-     /**
-     * Get App Wallet Balance in ETH.
-     */
-    public function getBalance(string $address)
-    {
-        
     }
 }
