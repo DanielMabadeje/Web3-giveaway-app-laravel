@@ -76,6 +76,7 @@
                             {{__('Giveaway Details')}}
                         </h2>
 
+                        {{QrCode::size(150)->generate(route('claim-giveaway-participant', $giveaway->reference));}}
                         <div class="p-6 text-gray-900 dark:text-gray-100">
                             {{$giveaway->giveaway_name}}
                         </div>

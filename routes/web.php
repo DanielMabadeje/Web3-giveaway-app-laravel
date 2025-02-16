@@ -31,6 +31,6 @@ Route::middleware('auth')->group(function () {
 // });
 
 
-Route::get('claim-giveaway/{id}', [GiveawayParticipantController::class, 'create']);
+Route::get('claim-giveaway/{id}', [GiveawayParticipantController::class, 'create'])->name('claim-giveaway-participant');
 Route::post('claim-giveaway/{id}', [GiveawayParticipantController::class, 'store'])->name('add-giveaway-participant');
 require __DIR__.'/auth.php';
